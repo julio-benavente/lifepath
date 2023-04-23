@@ -50,26 +50,6 @@ const LoginView = () => {
 
 export default LoginView;
 
-const TextFieldStyled = styled(TextFieldComponet)(({ theme }) => ({
-  // "& .MuiInputBase-root": {
-  //   borderRadius: "20px",
-  // },
-  // "& .MuiInputBase-input": {
-  //   padding: "24px 16px 8px 16px",
-  //   color: "gray",
-  //   fontWeight: 700,
-  //   letterSpacing: "0px",
-  // },
-  // "& .MuiInputLabel-root.MuiInputLabel-shrink": {
-  //   color: "darkgray",
-  //   fontSize: "12px",
-  //   transform: "translate(14px, 8px)",
-  // },
-  // "& fieldset legend": {
-  //   width: "0px",
-  // },
-}));
-
 const TextField = ({
   variant,
   inputProps,
