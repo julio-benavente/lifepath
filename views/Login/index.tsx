@@ -26,31 +26,19 @@ const LoginView = () => {
             </a>
           </p>
           <div className="grid max-w-lg grid-cols-2 mb-4 gap-x-4 gap-y-4">
-            <TextField
-              id="name"
-              label="Frist name"
-              // InputLabelProps={{ className: "!text-gray-300" }}
-              inputProps={{ className: "!text-white" }}
-            />
-            <TextField
-              id="lastname"
-              label="Last name"
-              // InputLabelProps={{ className: "!text-gray-300" }}
-              inputProps={{ className: "!text-white" }}
-            />
+            <TextField variant="outlined" id="name" label="Frist name" />
+            <TextField variant="outlined" id="lastname" label="Last name" />
             <EmailField
+              variant="outlined"
               id="email"
               className="col-span-full"
               label="Email"
-              // InputLabelProps={{ className: "!text-gray-300" }}
-              inputProps={{ className: "!text-white" }}
             />
             <PasswordField
+              variant="outlined"
               id="password"
               className="col-span-full"
               label="Password"
-              // InputLabelProps={{ className: "!text-gray-300" }}
-              inputProps={{ className: "!text-white" }}
             />
           </div>
           <Button className="!mx-auto !block">Create account</Button>
@@ -83,6 +71,7 @@ const TextFieldStyled = styled(TextFieldComponet)(({ theme }) => ({
 }));
 
 const TextField = ({
+  variant,
   inputProps,
   InputProps,
   InputLabelProps,
@@ -114,12 +103,13 @@ const TextField = ({
         shrink: true,
         // ...InputLabelProps,
       }}
+      variant={variant && "outlined"}
       {...props}
     />
   );
 };
 
-const EmailField = (props: TextFieldProps) => (
+const EmailField = ({ ...props }: OutlinedTextFieldProps) => (
   <TextField
     InputProps={{
       endAdornment: (
@@ -132,7 +122,7 @@ const EmailField = (props: TextFieldProps) => (
   />
 );
 
-const PasswordField = (props: TextFieldProps) => (
+const PasswordField = (props: OutlinedTextFieldProps) => (
   <TextField
     type="password"
     InputProps={{
