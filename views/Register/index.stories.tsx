@@ -1,4 +1,4 @@
-import Login from "./";
+import Login from ".";
 
 export default {
   title: "Views/Login",
