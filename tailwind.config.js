@@ -11,7 +11,11 @@ module.exports = {
   ],
   important: true,
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        "none-on-autocomplete": "0 0 0px 1000px rgba(0,0,0,0) inset !important",
+      },
+    },
   },
   plugins: [],
 };

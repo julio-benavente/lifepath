@@ -1,11 +1,11 @@
-import Login from "./";
+import LoginView from ".";
 
 export default {
-  title: "Views/Login",
-  component: Login,
+  title: "Views/Register",
+  component: LoginView,
   parameters: {
     layout: "fullscreen",
   },
 };
 
-export const Playground = () => <Login />;
+export const Playground = () => <LoginView />;

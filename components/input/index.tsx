@@ -20,7 +20,8 @@ const TextField = ({
       InputProps={{
         classes: {
           root: "tw rounded-2xl .",
-          input: "tw px-4 pt-6 pb-2 font-bold text-gray-700 .",
+          input:
+            "tw px-4 pt-6 pb-2 font-bold text-gray-700 shadow-none-on-autocomplete .",
         },
         endAdornment: (
           <InputAdornment position="end">
