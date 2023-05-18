@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { AccessTimeFilledSharp, Dashboard } from "@mui/icons-material";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -10,6 +10,8 @@ import * as C from "@/components/index";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import {
   Box,
+  Menu,
+  MenuItem,
   Modal,
   Paper,
   Slide,
@@ -525,6 +527,18 @@ interface DashboardTableRowProps {
 }
 
 const DashboardTableRow = ({ data }: DashboardTableRowProps) => {
+  const doctorRef = useRef<null | HTMLElement>();
+  const [anchorEl, setAnchorEl] = React.useState<
+    HTMLElement | null | undefined
+  >(null);
+  const actionsPopUpIsOpen = Boolean(anchorEl);
+  const handleClick = () => {
+    setAnchorEl(doctorRef?.current);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <TableRow>
       <TableCell className="py-2">
@@ -546,7 +560,7 @@ const DashboardTableRow = ({ data }: DashboardTableRowProps) => {
           {data.description}
         </TableCell>
       </Tooltip>
-      <TableCell className="py-2" align="center">
+      <TableCell className="py-2" align="center" ref={doctorRef}>
         {data.doctor}
       </TableCell>
       <TableCell className="py-2" align="center">
@@ -554,20 +568,31 @@ const DashboardTableRow = ({ data }: DashboardTableRowProps) => {
       </TableCell>
       <TableCell className="py-2" align="center">
         <div className="relative">
-          <button>
+          <button id="basic-button" onClick={handleClick}>
             <MoreVertOutlinedIcon className="text-gray-400 transition hover:text-gray-800" />
           </button>
 
-          <Tooltip
-            title={
-              <ul>
-                <li>See appointment</li>
-                <li>See patient</li>
-                <li>Cancel appointment</li>
-              </ul>
-            }
-            className="absolute h-20 p-2 rounded-md shadow-md top-2 right-8 bg-pink-50"
-          ></Tooltip>
+          <Menu
+            id="basic-menu"
+            anchorEl={anchorEl}
+            open={actionsPopUpIsOpen}
+            onClose={handleClose}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleClose}>Logout</MenuItem>
+          </Menu>
         </div>
       </TableCell>
     </TableRow>
