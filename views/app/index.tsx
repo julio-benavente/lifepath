@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AccessTimeFilledSharp } from "@mui/icons-material";
+import { AccessTimeFilledSharp, Dashboard } from "@mui/icons-material";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import FamilyRestroomOutlinedIcon from "@mui/icons-material/FamilyRestroomOutlined";
@@ -31,6 +31,10 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import Person4OutlinedIcon from "@mui/icons-material/Person4Outlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import MoreVertOutlinedIcon from "@mui/icons-material/MoreVertOutlined";
+
 const AppView = () => {
   const [addAppointmentModalIsOpen, setAddAppointmentModalIsOpen] =
     useState(false);
@@ -101,13 +105,24 @@ const AddAppointmentSearchForm = () => {
 
 const UserData = () => {
   return (
-    <div className="mb-8">
-      <p>
-        <b>Nombre: </b>Marco Antonio Solis Arevalo
-      </p>
-      <p>
-        <b>Edad: </b>55
-      </p>
+    <div className="p-4 mb-8 border border-gray-300 rounded-xl">
+      {[
+        {
+          label: "Marco Antonio Solis Arevalo",
+          icon: Person4OutlinedIcon,
+        },
+        {
+          label: "55",
+          icon: CalendarMonthOutlinedIcon,
+        },
+      ].map((item) => (
+        <div className="grid justify-start grid-flow-col gap-4">
+          <span>
+            <item.icon className="text-gray-600" />
+          </span>
+          <span>{item.label}</span>
+        </div>
+      ))}
     </div>
   );
 };
@@ -141,7 +156,11 @@ const AddAppointmentForm = () => {
   );
 };
 
-const Header = ({ setAddAppointmentModalIsOpen }) => {
+const Header = ({
+  setAddAppointmentModalIsOpen,
+}: {
+  setAddAppointmentModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   return (
     <div className="grid items-center justify-between grid-flow-col mb-8">
       <h1 className="text-lg font-bold">Appointments</h1>
@@ -169,8 +188,8 @@ const SearchForm = () => {
 
 const Sidebar = () => {
   return (
-    <div className="px-8 py-6">
-      <h1 className="mb-8 text-xl font-bold">Company logo</h1>
+    <div className="sticky top-0 max-h-screen px-6 py-6 bg-blue-800">
+      <h1 className="mb-8 text-xl font-bold text-gray-200">Company logo</h1>
       {[
         {
           link: "/",
@@ -204,11 +223,8 @@ const Sidebar = () => {
         },
       ].map((e) => {
         return (
-          <Link href={e.link}>
-            <div
-              key={e.link}
-              className="grid grid-cols-[28px_1fr] gap-x-4 px-4 py-3 mb-2 text-gray-400 hover:text-white hover:bg-blue-700 rounded-lg items-center transition-all cursor-pointer"
-            >
+          <Link href={e.link} key={e.link}>
+            <div className="grid grid-cols-[28px_1fr] gap-x-4 px-4 py-3 mb-2 text-gray-200 hover:text-white hover:bg-blue-700 rounded-lg items-center transition-all cursor-pointer">
               <div>{<e.icon className="w-5 h-5" />}</div>
               <p className="text-sm">{e.label}</p>
             </div>
@@ -411,11 +427,12 @@ const AppointmentsTable = () => {
   ];
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const [dense, setDense] = React.useState(false);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -430,8 +447,6 @@ const AppointmentsTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  console.log(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <TableContainer component={Paper} className="relative">
@@ -459,45 +474,25 @@ const AppointmentsTable = () => {
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
-          ).map((row) => (
-            <TableRow key={row.name}>
-              <TableCell className="py-2">
-                <span className="flex items-center justify-center w-6 h-6 mx-auto text-xs rounded bg-emerald-200 text-emerald-800">
-                  {row.status === "pending" && "P"}
-                </span>
-              </TableCell>
-              <TableCell className="py-2" component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <Tooltip
-                title={row.description}
-                arrow
-                placement="top"
-                enterDelay={1000}
-                enterNextDelay={1000}
-                // enterTouchDelay={100}
-                // disableHoverListener
-              >
-                <TableCell className="max-w-xs py-2 truncate" align="left">
-                  {row.description}
-                </TableCell>
-              </Tooltip>
-              <TableCell className="py-2" align="center">
-                {row.doctor}
-              </TableCell>
-              <TableCell className="py-2" align="center">
-                {row.date}
-              </TableCell>
-              <TableCell className="py-2" align="center">
-                {row.actions}
-              </TableCell>
+          )
+            .slice(0, 1)
+            .map((row, i) => (
+              <DashboardTableRow data={row} key={`${row.name}-${i}`} />
+            ))}
+          {emptyRows > 0 && (
+            <TableRow
+              style={{
+                height: 40.8 * emptyRows,
+              }}
+            >
+              <TableCell colSpan={6} />
             </TableRow>
-          ))}
+          )}
         </TableBody>
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[7, 10, 25, { label: "All", value: -1 }]}
               colSpan={3}
               count={rows.length}
               rowsPerPage={rowsPerPage}
@@ -516,5 +511,65 @@ const AppointmentsTable = () => {
         </TableFooter>
       </Table>
     </TableContainer>
+  );
+};
+
+interface DashboardTableRowProps {
+  data: {
+    status: string;
+    name: string;
+    description: string;
+    doctor: string;
+    date: string;
+  };
+}
+
+const DashboardTableRow = ({ data }: DashboardTableRowProps) => {
+  return (
+    <TableRow>
+      <TableCell className="py-2">
+        <span className="flex items-center justify-center w-6 h-6 mx-auto text-xs rounded bg-emerald-200 text-emerald-800">
+          {data.status === "pending" && "P"}
+        </span>
+      </TableCell>
+      <TableCell className="py-2" component="th" scope="row">
+        {data.name}
+      </TableCell>
+      <Tooltip
+        title={data.description}
+        arrow
+        placement="top"
+        enterDelay={1000}
+        enterNextDelay={1000}
+      >
+        <TableCell className="max-w-xs py-2 truncate" align="left">
+          {data.description}
+        </TableCell>
+      </Tooltip>
+      <TableCell className="py-2" align="center">
+        {data.doctor}
+      </TableCell>
+      <TableCell className="py-2" align="center">
+        {data.date}
+      </TableCell>
+      <TableCell className="py-2" align="center">
+        <div className="relative">
+          <button>
+            <MoreVertOutlinedIcon className="text-gray-400 transition hover:text-gray-800" />
+          </button>
+
+          <Tooltip
+            title={
+              <ul>
+                <li>See appointment</li>
+                <li>See patient</li>
+                <li>Cancel appointment</li>
+              </ul>
+            }
+            className="absolute h-20 p-2 rounded-md shadow-md top-2 right-8 bg-pink-50"
+          ></Tooltip>
+        </div>
+      </TableCell>
+    </TableRow>
   );
 };
